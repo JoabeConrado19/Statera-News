@@ -80,11 +80,19 @@ class NewStartScrappyView(APIView):
             for article in articles:
                 new_content = {}
 
-                img = article.find(class_= "rms_img")
-                print(img)
-                imgSrc = "no src"
+                src_value = ""
+                img = article.find(class_= "right")
                 if img is not None:
-                    imgSrc = img['src']
+                    imgLink = img.find("a")
+                    if imgLink is not None:
+                        imgA = imgLink.find("img")
+                        if imgA and 'data-src-hq' in imgA.attrs:
+                            src_value = imgA['data-src-hq']
+                            print(src_value)
+                        else:
+                            print("A tag da imagem não possui o atributo 'src'.")
+                
+              
 
                 title = article.find(class_="title")
                 link = title['href']
@@ -107,7 +115,7 @@ class NewStartScrappyView(APIView):
                 # pretty_text = text.prettify().strip().replace("\n", "").replace("\t", "")
                 
                 new_content['title'] = titleText
-                new_content['thumb'] = "https://th.bing.com" + imgSrc
+                new_content['thumb'] = "https://th.bing.com" + src_value
                 new_content['link'] = link
                 new_content['company'] = companyName
                 new_content['text'] = text
