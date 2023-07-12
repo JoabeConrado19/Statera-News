@@ -17,7 +17,7 @@ from django.shortcuts import get_object_or_404
 # Create your views here.
     
 
-class NewView(APIView, PageNumberPagination):
+class NewView(APIView):
 
     def get(self, request: Request) -> Request:
         news_list = []
@@ -33,9 +33,8 @@ class NewView(APIView, PageNumberPagination):
             news_list.append(new_dict)
 
         reverse = list(reversed(news_list))
-        result_page = self.paginate_queryset(reverse, request)
 
-        return self.get_paginated_response(result_page)
+        return Response(reverse)
         
 
 
