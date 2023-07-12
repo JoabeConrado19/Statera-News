@@ -25,13 +25,15 @@ class NewView(APIView, PageNumberPagination):
         titulo = request.GET.get('title')
 
         if titulo:
-            news= news.filter(title__icontains=titulo)
+            news = news.filter(title__icontains=titulo)
+
         for new in news:
-            news_list.append(model_to_dict(new))
+            new_dict = model_to_dict(new)
+            new_dict['createdAt'] = new.created_at.strftime("%Y-%m-%d %H:%M:%S")  # Adiciona createdAt ao dicionário
+            news_list.append(new_dict)
 
         reverse = list(reversed(news_list))
         result_page = self.paginate_queryset(reverse, request)
-        
 
         return self.get_paginated_response(result_page)
         
@@ -121,7 +123,7 @@ class NewStartScrappyView(APIView):
                 new_content['text'] = text
 
                 new_addict = New.objects.create(**new_content)
-                news_list.append(new_addict)
+                news_list.append(new_content)
 
             
             return Response(news_list, status.HTTP_200_OK)
