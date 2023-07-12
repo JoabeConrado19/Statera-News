@@ -121,7 +121,7 @@ class NewStartScrappyView(APIView):
                 new_content['text'] = text
 
                 new_addict = New.objects.create(**new_content)
-                news_list.append(new_content)
+                news_list.append(new_addict)
 
             
             return Response(news_list, status.HTTP_200_OK)
